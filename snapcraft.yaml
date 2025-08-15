@@ -1,0 +1,57 @@
+name: gtk-theme-qogir
+build-base: core24
+base: bare
+adopt-info: gtk-theme-qogir
+platforms:
+  all:
+    build-on: [amd64]
+    build-for: [all]
+summary: Qogir GTK theme
+description: |
+  A Snap that allows you to use Qogir GTK themes in Snap apps
+grade: stable
+confinement: strict
+compression: lzo
+
+slots:
+  gtk-2-themes:
+    interface: content
+    source:
+      read:
+        - $SNAP/usr/share/gtk2/Qogir
+        - $SNAP/usr/share/gtk2/Qogir-Dark
+        - $SNAP/usr/share/gtk2/Qogir-Light
+        - $SNAP/usr/share/gtk2/Qogir-Manjaro
+        - $SNAP/usr/share/gtk2/Qogir-Manjaro-Dark
+        - $SNAP/usr/share/gtk2/Qogir-Manjaro-Light
+        - $SNAP/usr/share/gtk2/Qogir-Ubuntu
+        - $SNAP/usr/share/gtk2/Qogir-Ubuntu-Dark
+        - $SNAP/usr/share/gtk2/Qogir-Ubuntu-Light
+  gtk-3-themes:
+    interface: content
+    source:
+      read:
+        - $SNAP/usr/share/themes/Qogir
+        - $SNAP/usr/share/themes/Qogir-Dark
+        - $SNAP/usr/share/themes/Qogir-Light
+        - $SNAP/usr/share/themes/Qogir-Manjaro
+        - $SNAP/usr/share/themes/Qogir-Manjaro-Dark
+        - $SNAP/usr/share/themes/Qogir-Manjaro-Light
+        - $SNAP/usr/share/themes/Qogir-Ubuntu
+        - $SNAP/usr/share/themes/Qogir-Ubuntu-Dark
+        - $SNAP/usr/share/themes/Qogir-Ubuntu-Light
+parts:
+  gtk-theme-qogir:
+    plugin: nil
+    source: https://github.com/vinceliuice/Qogir-theme.git
+    build-packages: [libsass1, sassc]
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/gtk2/
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/themes/
+      ./install.sh --theme all --dest $CRAFT_PART_INSTALL/usr/share/gtk2
+      ./install.sh --theme all --dest $CRAFT_PART_INSTALL/usr/share/themes
+      craftctl set version=$(date +%Y-%m-%d)
+    prime:
+      - usr/share/gtk2/*/gtk-2.0
+      - usr/share/themes/*/gtk-3.0
+      - usr/share/themes/*/gtk-4.0
